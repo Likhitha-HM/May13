@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', 
-                    url: 'https://github.com/Likhitha-HM/May13.git',
+                    url: 'https://github.com/Likhitha-HM/lab6.git',
                     credentialsId: 'github-token'
             }
         }
@@ -38,5 +38,23 @@ pipeline {
                 sh 'mvn exec:java -Dexec.mainClass="com.example.app.App"'
             }
         }
-    } 
-}
+    } // End of Stages
+
+    post {
+        success {
+            emailext (
+                subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+                body: "Build succeeded!\nCheck: ${BUILD_URL}",
+                to: "likhithahm953@gmail.com"
+            )
+        }
+
+        failure {
+            emailext (
+                subject: "FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+                body: "Build failed!\nCheck: ${BUILD_URL}",
+                to: "likhithahm953@gmail.com"
+            )
+        }
+    } // End of Post
+} // End of Pipeline
